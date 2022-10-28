@@ -14,17 +14,14 @@ public class PlayerController : MonoBehaviour
 
     private Vector3 MoveDirection;
     private Vector3 MoveRotate;
-    // Start is called before the first frame update
+
     void Start()
     {
         rb = gameObject.GetComponent<Rigidbody>();
     }
 
-    // Update is called once per frame
     void Update()
     {
-
-
         float verticalAxes = Input.GetAxis("Vertical");
         float horizontalAxes = Input.GetAxis("Horizontal");
 
