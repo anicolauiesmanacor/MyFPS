@@ -2,66 +2,78 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class PlayerController : MonoBehaviour
-{
+public class PlayerController : MonoBehaviour {
     private Rigidbody rb;
-    public Animator anim;
-    [SerializeField] private float MoveSpeed = 20f;
-    [SerializeField] private float VelRot = 100f;
-    [SerializeField] private float JumpForce = 20f;
-    private bool doJump = false;
-    private int cont = 0;
-
+    //Movement
+    [SerializeField] private float MoveSpeed;
+    [SerializeField] private float VelRot;
+    [SerializeField] private float JumpForce;
+    private bool isGrounded;
     private Vector3 MoveDirection;
     private Vector3 MoveRotate;
-    // Start is called before the first frame update
-    void Start()
-    {
+
+    //Animator
+    private Animator anim;
+    private AnimatorController animCont;
+
+    void Start() {
         rb = gameObject.GetComponent<Rigidbody>();
+        animCont = gameObject.GetComponentInChildren<AnimatorController>();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
+    void Update() {
+        Movement();
+        //UpdateAnimatorState();
+    }
 
-
-        float verticalAxes = Input.GetAxis("Vertical");
-        float horizontalAxes = Input.GetAxis("Horizontal");
-
+    float verticalAxes;
+    float horizontalAxes;
+    void Movement() {
+        //if (animCont.currentState != animCont.stPunching && animCont.currentState != animCont.stKicking) {
+        verticalAxes = Input.GetAxis("Vertical");
+        horizontalAxes = Input.GetAxis("Horizontal");
         MoveDirection = transform.forward * verticalAxes;
-
         MoveRotate = new Vector3(0f, horizontalAxes, 0f);
-
-        transform.position += MoveDirection * MoveSpeed * Time.deltaTime;
         transform.Rotate(MoveRotate * VelRot * Time.deltaTime);
+        transform.position += MoveDirection * MoveSpeed * Time.deltaTime;
+        //}
+
+        if (isGrounded ) {
+            //if (animCont.currentState == animCont.stWalking || animCont.currentState == animCont.stBackwalking) {
+            if (verticalAxes > 0.1f) {
+                animCont.SetAnimatorState(animCont.stWalking);
+            } else if (verticalAxes < -0.1f) {
+                animCont.SetAnimatorState(animCont.stBackwalking);
+            } else {
+                animCont.SetAnimatorState(animCont.stIdle);
+            }
+            //}
+        }
 
         if (verticalAxes > 0.1f) {
-            anim.SetBool("walk", true);
-        } else {
-            anim.SetBool("walk", false);
+            if (Input.GetKey(KeyCode.LeftShift)) {
+                animCont.SetAnimatorState(animCont.stRunning);
+            } else {
+                animCont.SetAnimatorState(animCont.stWalking);
+            }
         }
 
-        if (Input.GetButtonDown("Jump") && cont<=1)
-        {
-            doJump = true;
-            cont++;
-            anim.SetBool("jump", true);
+        if (Input.GetButtonDown("Jump") && isGrounded) {
+            isGrounded = false;
+            animCont.SetAnimatorState(animCont.stJumping);
+            rb.AddForce(Vector3.up * JumpForce);
+        }
+
+        if (Input.GetMouseButtonDown(0)) {
+            animCont.SetAnimatorState(animCont.stPunching);
+        } else if (Input.GetMouseButtonDown(1)) { 
+            animCont.SetAnimatorState(animCont.stKicking);
         }
     }
 
-    private void FixedUpdate()
-    {
-        if (doJump)
-        {
-            rb.AddForce(0, JumpForce, 0, ForceMode.Impulse);
-            doJump = false;
-            anim.SetBool("jump", false);
-            
+    void OnCollisionEnter(Collision col) {
+        if (col.gameObject.CompareTag("Ground")) {
+            isGrounded = true;
         }
-
-    }
-    private void OnCollisionEnter(Collision collision)
-    {
-        cont = 0;
-    }
+    }  
 }

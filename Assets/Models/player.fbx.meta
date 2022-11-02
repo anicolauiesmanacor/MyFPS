@@ -8,7 +8,7 @@ ModelImporter:
     second: idle
   - first:
       74: -3419257869308726280
-    second: walk
+    second: backwalk
   - first:
       74: 6200578666267062213
     second: run
@@ -92,7 +92,7 @@ ModelImporter:
       cycleOffset: 0
       loop: 0
       hasAdditiveReferencePose: 0
-      loopTime: 0
+      loopTime: 1
       loopBlend: 0
       loopBlendOrientation: 0
       loopBlendPositionY: 0
@@ -110,7 +110,7 @@ ModelImporter:
       maskSource: {instanceID: 0}
       additiveReferencePoseFrame: 0
     - serializedVersion: 16
-      name: walk
+      name: backwalk
       takeName: walk
       internalID: 0
       firstFrame: 0
