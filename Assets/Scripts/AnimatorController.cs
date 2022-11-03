@@ -62,10 +62,17 @@ public class AnimatorController : MonoBehaviour {
         }
     }
 
-    public void AnimationIsOver() {
-        anim.SetBool("punch", false);
-        anim.SetBool("jump", false);
+    public void KickIsOver() {
         anim.SetBool("kick", false);
+    }
+
+    public void PunchIsOver() {
+        anim.SetBool("punch", false);
+    }
+    
+    public void JumpIsOver() {
+        anim.SetBool("jump", false);
+        plyCont.isGrounded = true;
     }
 
     public void SetAnimatorState(int state) {

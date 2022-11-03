@@ -8,7 +8,7 @@ public class PlayerController : MonoBehaviour {
     [SerializeField] private float MoveSpeed;
     [SerializeField] private float VelRot;
     [SerializeField] private float JumpForce;
-    private bool isGrounded;
+    public bool isGrounded = true;
     private Vector3 MoveDirection;
     private Vector3 MoveRotate;
 
