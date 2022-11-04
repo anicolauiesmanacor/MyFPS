@@ -19,6 +19,7 @@ public class PlayerController : MonoBehaviour {
     void Start() {
         rb = gameObject.GetComponent<Rigidbody>();
         animCont = gameObject.GetComponentInChildren<AnimatorController>();
+        anim = gameObject.GetComponent<Animator>();
     }
 
     void Update() {
@@ -30,24 +31,28 @@ public class PlayerController : MonoBehaviour {
     float horizontalAxes;
     void Movement() {
         //if (animCont.currentState != animCont.stPunching && animCont.currentState != animCont.stKicking) {
-        verticalAxes = Input.GetAxis("Vertical");
-        horizontalAxes = Input.GetAxis("Horizontal");
-        MoveDirection = transform.forward * verticalAxes;
-        MoveRotate = new Vector3(0f, horizontalAxes, 0f);
-        transform.Rotate(MoveRotate * VelRot * Time.deltaTime);
-        transform.position += MoveDirection * MoveSpeed * Time.deltaTime;
+        
+        
         //}
 
-        if (isGrounded ) {
-            //if (animCont.currentState == animCont.stWalking || animCont.currentState == animCont.stBackwalking) {
-            if (verticalAxes > 0.1f) {
-                animCont.SetAnimatorState(animCont.stWalking);
-            } else if (verticalAxes < -0.1f) {
-                animCont.SetAnimatorState(animCont.stBackwalking);
-            } else {
-                animCont.SetAnimatorState(animCont.stIdle);
+        
+        if (animCont.currentState != animCont.stPunching && animCont.currentState != animCont.stKicking) {
+            verticalAxes = Input.GetAxis("Vertical");
+            horizontalAxes = Input.GetAxis("Horizontal");
+            MoveDirection = transform.forward * verticalAxes;
+            MoveRotate = new Vector3(0f, horizontalAxes, 0f);
+            transform.Rotate(MoveRotate * VelRot * Time.deltaTime);
+            transform.position += MoveDirection * MoveSpeed * Time.deltaTime;
+
+            if (isGrounded ) {
+                if (verticalAxes > 0.1f) {
+                    animCont.SetAnimatorState(animCont.stWalking);
+                } else if (verticalAxes < -0.1f) {
+                    animCont.SetAnimatorState(animCont.stBackwalking);
+                } else {
+                    animCont.SetAnimatorState(animCont.stIdle);
+                }
             }
-            //}
         }
 
         if (verticalAxes > 0.1f) {

@@ -11,7 +11,7 @@ public class AnimatorController : MonoBehaviour {
     public int stKicking = 5;
     public int stJumping = 6;
     public int stDying = 7;
-    public int previousState = 0;
+    //public int previousState = 0;
     public int currentState = 0;
 
     private PlayerController plyCont;
@@ -24,7 +24,7 @@ public class AnimatorController : MonoBehaviour {
     }
 
     void Update() {
-        if (previousState != currentState) {
+        //if (previousState != currentState) {
             anim.SetBool("punch", false);
             anim.SetBool("jump", false);
             anim.SetBool("kick", false);
@@ -58,21 +58,23 @@ public class AnimatorController : MonoBehaviour {
                     anim.SetBool("death", true);
                     break;
             }
-            previousState = currentState;
-        }
+            //previousState = currentState;
+        //}
     }
 
     public void KickIsOver() {
         anim.SetBool("kick", false);
+        currentState = stIdle;
     }
 
     public void PunchIsOver() {
         anim.SetBool("punch", false);
+        currentState = stIdle;
     }
     
     public void JumpIsOver() {
         anim.SetBool("jump", false);
-        plyCont.isGrounded = true;
+        currentState = stIdle;
     }
 
     public void SetAnimatorState(int state) {
