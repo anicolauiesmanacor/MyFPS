@@ -28,15 +28,32 @@ public class PlayerController : MonoBehaviour {
 
     float verticalAxes;
     float horizontalAxes;
+    float mouseX, mouseY;
+    public float sensX, sensY;
+    public Transform orientation;
+    public float xRot, yRot;
+
     void Movement() {
-        //if (animCont.currentState != animCont.stPunching && animCont.currentState != animCont.stKicking) {
-        verticalAxes = Input.GetAxis("Vertical");
-        horizontalAxes = Input.GetAxis("Horizontal");
-        MoveDirection = transform.forward * verticalAxes;
-        MoveRotate = new Vector3(0f, horizontalAxes, 0f);
-        transform.Rotate(MoveRotate * VelRot * Time.deltaTime);
-        transform.position += MoveDirection * MoveSpeed * Time.deltaTime;
-        //}
+        if (animCont.currentState != animCont.stPunching && animCont.currentState != animCont.stKicking) {
+            verticalAxes = Input.GetAxis("Vertical");
+            horizontalAxes = Input.GetAxis("Horizontal");
+
+            //
+            mouseX = Input.GetAxisRaw("Mouse X") * Time.deltaTime * sensX;
+            mouseY = Input.GetAxisRaw("Mouse Y") * Time.deltaTime * sensY;
+            xRot += mouseX;
+            yRot -= mouseY;
+            xRot = Mathf.Clamp(xRot, -90f, 90f);
+            
+            //
+            transform.rotation = Quaternion.Euler(0, xRot,0 );
+            //orientation.rotation = Quaternion.Euler(0, yRot, 0);
+
+            MoveDirection = transform.forward * verticalAxes;
+            MoveRotate = new Vector3(0f, horizontalAxes, 0f);
+            transform.Rotate(MoveRotate * VelRot * Time.deltaTime);
+            transform.position += MoveDirection * MoveSpeed * Time.deltaTime;
+        }
 
         if (isGrounded ) {
             //if (animCont.currentState == animCont.stWalking || animCont.currentState == animCont.stBackwalking) {
